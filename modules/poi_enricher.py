@@ -21,17 +21,33 @@ def find_pois_along_route(api_key: str, route_points: List[Tuple[float, float]],
                          preferences: Dict[str, int]) -> List[Dict]:
     """Find interesting places along the route based on user preferences"""
     
-    # Map preferences to Google Places types
-    poi_types = []
-    if preferences.get('food', 0) > 0:
-        poi_types.extend(['restaurant', 'cafe', 'bakery'])
-    if preferences.get('culture', 0) > 0:
-        poi_types.extend(['museum', 'art_gallery', 'library'])
-    if preferences.get('scenic', 0) > 0:
-        poi_types.extend(['park', 'tourist_attraction'])
-    if preferences.get('architecture', 0) > 0:
-        poi_types.extend(['place_of_worship', 'city_hall'])
-    
+    # Map preference categories to Google Places types
+    preference_type_map = {
+        'food': ['restaurant', 'cafe', 'bakery'],
+        'culture': ['museum', 'art_gallery', 'library'],
+        'scenic': ['park', 'tourist_attraction'],
+        'architecture': ['place_of_worship', 'city_hall']
+    }
+
+    # Sort active preference categories by weight (highest first)
+    active_categories = [
+        (pref, preference_type_map[pref])
+        for pref in preference_type_map
+        if preferences.get(pref, 0) > 0
+    ]
+    active_categories.sort(key=lambda x: preferences.get(x[0], 0), reverse=True)
+
+    # Round-robin selection to ensure variety while respecting weights
+    poi_types: List[str] = []
+    round_index = 0
+    while len(poi_types) < 3 and active_categories:
+        for pref, types in active_categories:
+            if round_index < len(types):
+                poi_types.append(types[round_index])
+                if len(poi_types) == 3:
+                    break
+        round_index += 1
+
     if not poi_types:
         poi_types = ['point_of_interest']
     
@@ -49,7 +65,7 @@ def find_pois_along_route(api_key: str, route_points: List[Tuple[float, float]],
             }
             
             data = {
-                "includedTypes": poi_types[:3],  # Limit to first 3 types to avoid quota issues
+                "includedTypes": poi_types,  # Already limited to top types
                 "maxResultCount": 10,
                 "locationRestriction": {
                     "circle": {
