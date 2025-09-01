@@ -98,8 +98,13 @@ def main():
 
                 # Get alternatives within time constraint
                 alternatives = get_alternative_routes(
-                    google_maps_key, origin, destination, travel_mode,
-                    baseline['duration'], max_extra_time
+                    google_maps_key,
+                    origin,
+                    destination,
+                    travel_mode,
+                    baseline['duration'],
+                    max_extra_time,
+                    baseline['polyline'],
                 )
 
                 # Combine and score all routes

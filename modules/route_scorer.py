@@ -47,8 +47,18 @@ def calculate_heuristic_score(route: Dict, pois: List[Dict], preferences: Dict[s
 
 def score_with_openai(route: Dict, pois: List[Dict], preferences: Dict[str, int]) -> Dict[str, Any]:
     """Get AI explanation and refined score"""
-    
-    # Build context for AI
+    if not pois:
+        heuristic_score = calculate_heuristic_score(route, pois, preferences)
+        explanation = "No notable places were found along this route."
+        if route.get('extra_time_percent', 0) > 0:
+            explanation += f" Takes {route['extra_time_percent']:.0f}% extra time."
+        return {
+            'score': heuristic_score,
+            'explanation': explanation,
+            'method': 'heuristic'
+        }
+
+    # Build context for AI using real POIs only
     poi_summary = []
     for poi in pois[:8]:  # Limit to top 8 to stay within token limits
         rating_text = f"({poi.get('rating', 'N/A')}⭐)" if poi.get('rating') else ""
@@ -65,6 +75,7 @@ Route info:
 
 User preferences (they care most about): {', '.join(active_prefs) if active_prefs else 'general exploration'}
 
+Use only the places listed above and do not invent new locations.
 Rate this route 1-10 for "interestingness" and write 2-3 sentences explaining why someone should (or shouldn't) take this path. Be conversational and specific about what makes it special.
 
 Format your response as:
