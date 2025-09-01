@@ -25,8 +25,7 @@ def find_pois_along_route(api_key: str, route_points: List[Tuple[float, float]],
     preference_type_map = {
         'food': ['restaurant', 'cafe', 'bakery'],
         'culture': ['museum', 'art_gallery', 'library'],
-        'scenic': ['park', 'tourist_attraction'],
-        'architecture': ['place_of_worship', 'city_hall']
+        'scenic': ['park', 'tourist_attraction']
     }
 
     # Sort active preference categories by weight (highest first)

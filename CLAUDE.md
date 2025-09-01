@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Diversion is a Python Streamlit application that finds scenic and interesting routes between two locations. The app goes beyond simple directions by discovering points of interest (POIs) along alternative routes and scoring them based on user preferences like scenic areas, food spots, cultural sites, and architecture.
+Diversion is a Python Streamlit application that finds scenic and interesting routes between two locations. The app goes beyond simple directions by discovering points of interest (POIs) along alternative routes and scoring them based on user preferences like scenic areas, food spots, cultural sites, and walkability.
 
 ## Development Commands
 
@@ -55,6 +55,6 @@ pip install -r requirements.txt
 ### Scoring Algorithm
 Routes are scored on a 1-10 scale considering:
 - POI density and quality (rating threshold: 3.5+)
-- User preference matching (food, culture, scenic, architecture, walkable)
+- User preference matching (food, culture, scenic, walkable)
 - Time penalty for routes significantly longer than baseline
 - AI-generated explanations when OpenAI API is available

@@ -72,14 +72,12 @@ def main():
     st.sidebar.header("What makes a route better?")
     
     preferences = {
-        'scenic': st.sidebar.slider('Scenic areas', 0, 5, 3, 
+        'scenic': st.sidebar.slider('Scenic areas', 0, 5, 3,
                                    help="Parks, waterfront, tree-lined streets"),
         'food': st.sidebar.slider('Food & drink', 0, 5, 3,
                                  help="Cafes, restaurants, food markets"),
         'culture': st.sidebar.slider('Cultural spots', 0, 5, 2,
                                     help="Museums, galleries, bookstores"),
-        'architecture': st.sidebar.slider('Interesting buildings', 0, 5, 2,
-                                         help="Historic or unique architecture"),
         'walkable': st.sidebar.slider('Pedestrian-friendly', 0, 5, 4,
                                      help="Wide sidewalks, pedestrian areas")
     }
