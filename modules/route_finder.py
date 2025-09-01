@@ -42,9 +42,16 @@ def get_baseline_route(api_key: str, origin: str, destination: str, mode: str) -
     }
 
 
-def get_alternative_routes(api_key: str, origin: str, destination: str, mode: str, 
-                         baseline_duration: int, max_extra_percent: int) -> List[Dict]:
-    """Get alternative routes within time constraints"""
+def get_alternative_routes(
+    api_key: str,
+    origin: str,
+    destination: str,
+    mode: str,
+    baseline_duration: int,
+    max_extra_percent: int,
+    baseline_polyline: str,
+) -> List[Dict]:
+    """Get alternative routes within time constraints."""
     url = "https://routes.googleapis.com/directions/v2:computeRoutes"
     headers = {
         "Content-Type": "application/json",
@@ -68,12 +75,20 @@ def get_alternative_routes(api_key: str, origin: str, destination: str, mode: st
     directions = response.json()
     
     max_duration = baseline_duration * (1 + max_extra_percent / 100)
-    viable_routes = []
-    
+    viable_routes: List[Dict] = []
+
     if 'routes' not in directions:
         return viable_routes
-    
-    for route in directions['routes'][1:]:  # Skip first route (usually same as baseline)
+
+    # Track polylines to avoid duplicate routes (including the baseline)
+    seen_polylines = {baseline_polyline}
+
+    for route in directions['routes']:
+        poly = route['polyline']['encodedPolyline']
+        if poly in seen_polylines:
+            continue
+        seen_polylines.add(poly)
+
         duration_seconds = int(route['duration'].rstrip('s'))
         if duration_seconds <= max_duration:
             extra_time_percent = ((duration_seconds - baseline_duration) / baseline_duration) * 100
@@ -81,12 +96,12 @@ def get_alternative_routes(api_key: str, origin: str, destination: str, mode: st
             viable_routes.append({
                 'duration': duration_seconds,
                 'distance': distance_meters,
-                'polyline': route['polyline']['encodedPolyline'],
+                'polyline': poly,
                 'steps': route.get('legs', [{}])[0].get('steps', []),
                 'type': 'alternative',
                 'extra_time_percent': extra_time_percent,
                 'duration_text': f"{duration_seconds // 60} min",
                 'distance_text': f"{distance_meters / 1000:.1f} km" if distance_meters >= 1000 else f"{distance_meters} m"
             })
-    
+
     return viable_routes[:3]
