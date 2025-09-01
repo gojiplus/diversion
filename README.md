@@ -2,6 +2,8 @@
 
 Find scenic and interesting routes between two locations by discovering points of interest along alternative paths. Instead of just getting from A to B, find routes that pass by cafes, parks, museums, and other places that match your preferences.
 
+https://diversion.streamlit.app/
+
 ## Features
 
 - **Smart Route Discovery**: Finds alternative routes within your time constraints
