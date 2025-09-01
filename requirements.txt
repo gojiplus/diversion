@@ -3,6 +3,7 @@ requests>=2.25.0
 folium>=0.14.0
 streamlit-folium>=0.15.0
 polyline>=2.0.0
+googlemaps>=4.10.0
 openai>=0.28.0
 python-dotenv>=1.0.0
 pandas>=2.0.0
