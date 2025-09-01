@@ -104,7 +104,7 @@ def main():
                     travel_mode,
                     baseline['duration'],
                     max_extra_time,
-                    baseline['polyline'],
+                    baseline_polyline=baseline['polyline'],
                 )
 
                 # Combine and score all routes
