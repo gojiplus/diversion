@@ -5,7 +5,7 @@ from streamlit_folium import st_folium
 from modules.route_finder import get_baseline_route, get_alternative_routes
 from modules.route_scorer import score_routes
 from modules.map_builder import create_route_map, display_route_card
-from config.settings import GOOGLE_MAPS_API_KEY, OPENAI_API_KEY
+from config.settings import get_google_maps_api_key, get_openai_api_key
 
 
 st.set_page_config(page_title="Diversion", page_icon="🛤️", layout="wide")
@@ -15,15 +15,48 @@ def main():
     st.title("🛤️ Diversion")
     st.subheader("Find the scenic route")
     
+    # API Key configuration in sidebar
+    st.sidebar.header("🔑 API Configuration")
+    
+    # Check for keys in session state or environment
+    google_maps_key = get_google_maps_api_key()
+    openai_key = get_openai_api_key()
+    
+    # If no keys found, show input fields
+    if not google_maps_key:
+        google_maps_key = st.sidebar.text_input(
+            "Google Maps API Key", 
+            type="password",
+            help="Get one at: https://console.cloud.google.com/google/maps-apis"
+        )
+        if google_maps_key:
+            st.session_state['google_maps_api_key'] = google_maps_key
+    else:
+        st.sidebar.success("✅ Google Maps API key configured")
+    
+    if not openai_key:
+        openai_key = st.sidebar.text_input(
+            "OpenAI API Key", 
+            type="password",
+            help="Get one at: https://platform.openai.com/api-keys"
+        )
+        if openai_key:
+            st.session_state['openai_api_key'] = openai_key
+    else:
+        st.sidebar.success("✅ OpenAI API key configured")
+    
     # Initialize APIs
-    try:
-        openai.api_key = OPENAI_API_KEY
-        if not GOOGLE_MAPS_API_KEY:
-            st.error("Please configure your Google Maps API key in config/settings.py")
-            st.stop()
-    except Exception as e:
-        st.error("Please configure your API keys in config/settings.py")
-        st.stop()
+    if openai_key:
+        openai.api_key = openai_key
+    
+    # Check if both keys are available
+    if not google_maps_key or not openai_key:
+        st.info("👈 Please enter your API keys in the sidebar to get started")
+        st.write("**Required APIs:**")
+        st.write("- **Google Maps**: For route finding and places data")
+        st.write("- **OpenAI**: For AI-powered route explanations")
+        st.write("\n**Note:** Keys are only stored for this session and are not saved.")
+        return
     
     # Main input section
     col1, col2 = st.columns(2)
@@ -35,6 +68,7 @@ def main():
     travel_mode = st.radio("Travel mode", ["walking", "driving"], horizontal=True)
     
     # Preferences sidebar
+    st.sidebar.markdown("---")
     st.sidebar.header("What makes a route better?")
     
     preferences = {
@@ -60,18 +94,18 @@ def main():
         try:
             with st.spinner("Finding interesting routes..."):
                 # Get baseline route
-                baseline = get_baseline_route(GOOGLE_MAPS_API_KEY, origin, destination, travel_mode)
+                baseline = get_baseline_route(google_maps_key, origin, destination, travel_mode)
                 
                 # Get alternatives within time constraint
                 alternatives = get_alternative_routes(
-                    GOOGLE_MAPS_API_KEY, origin, destination, travel_mode,
+                    google_maps_key, origin, destination, travel_mode,
                     baseline['duration'], max_extra_time
                 )
                 
                 # Combine and score all routes
                 all_routes = [baseline] + alternatives
                 if all_routes:
-                    scored_routes = score_routes(all_routes, preferences, GOOGLE_MAPS_API_KEY)
+                    scored_routes = score_routes(all_routes, preferences, google_maps_key)
                 else:
                     scored_routes = []
             
@@ -93,7 +127,7 @@ def main():
             st.write("Please check your API keys and network connection.")
     
     # Instructions
-    if not origin or not destination:
+    elif not origin or not destination:
         st.info("👆 Enter your starting point and destination to find better routes")
     
     # Footer

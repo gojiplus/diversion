@@ -3,7 +3,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# API Keys - Set these in your .env file
+# API Keys - Can be set in .env file for local dev or passed via session state
+def get_google_maps_api_key():
+    """Get Google Maps API key from session state or environment"""
+    import streamlit as st
+    return st.session_state.get('google_maps_api_key') or os.getenv('GOOGLE_MAPS_API_KEY')
+
+def get_openai_api_key():
+    """Get OpenAI API key from session state or environment"""
+    import streamlit as st
+    return st.session_state.get('openai_api_key') or os.getenv('OPENAI_API_KEY')
+
+# Fallback for legacy usage
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
