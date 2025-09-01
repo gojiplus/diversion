@@ -1,6 +1,6 @@
 import requests
 import os
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 
 def get_baseline_route(api_key: str, origin: str, destination: str, mode: str) -> Dict:
@@ -49,7 +49,7 @@ def get_alternative_routes(
     mode: str,
     baseline_duration: int,
     max_extra_percent: int,
-    baseline_polyline: str,
+    baseline_polyline: Optional[str] = None,
 ) -> List[Dict]:
     """Get alternative routes within time constraints."""
     url = "https://routes.googleapis.com/directions/v2:computeRoutes"
@@ -81,7 +81,7 @@ def get_alternative_routes(
         return viable_routes
 
     # Track polylines to avoid duplicate routes (including the baseline)
-    seen_polylines = {baseline_polyline}
+    seen_polylines = {baseline_polyline} if baseline_polyline else set()
 
     for route in directions['routes']:
         poly = route['polyline']['encodedPolyline']
