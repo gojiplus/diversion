@@ -95,38 +95,41 @@ def main():
             with st.spinner("Finding interesting routes..."):
                 # Get baseline route
                 baseline = get_baseline_route(google_maps_key, origin, destination, travel_mode)
-                
+
                 # Get alternatives within time constraint
                 alternatives = get_alternative_routes(
                     google_maps_key, origin, destination, travel_mode,
                     baseline['duration'], max_extra_time
                 )
-                
+
                 # Combine and score all routes
                 all_routes = [baseline] + alternatives
                 if all_routes:
                     scored_routes = score_routes(all_routes, preferences, google_maps_key)
                 else:
                     scored_routes = []
-            
-            # Display results
-            if scored_routes:
-                st.subheader("Route Comparison")
-                route_map = create_route_map(scored_routes)
-                if route_map:
-                    st_folium(route_map, width=700, height=500)
-                
-                st.subheader("Route Options")
-                for i, route in enumerate(scored_routes):
-                    display_route_card(route, i+1)
-            else:
+
+            # Store results so they persist after reruns
+            st.session_state['scored_routes'] = scored_routes
+
+            if not scored_routes:
                 st.error("No suitable routes found within your time constraint.")
-                
+
         except Exception as e:
             st.error(f"Error finding routes: {str(e)}")
             st.write("Please check your API keys and network connection.")
-    
-    # Instructions
+
+    # Display existing results
+    if st.session_state.get('scored_routes'):
+        scored_routes = st.session_state['scored_routes']
+        st.subheader("Route Comparison")
+        route_map = create_route_map(scored_routes)
+        if route_map:
+            st_folium(route_map, width=700, height=500)
+
+        st.subheader("Route Options")
+        for i, route in enumerate(scored_routes):
+            display_route_card(route, i+1)
     elif not origin or not destination:
         st.info("👆 Enter your starting point and destination to find better routes")
     
