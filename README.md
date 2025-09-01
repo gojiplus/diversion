@@ -10,7 +10,7 @@ https://diversion.streamlit.app/
 - **POI-Based Scoring**: Discovers restaurants, parks, museums, and cultural sites along routes
 - **AI-Powered Recommendations**: Uses OpenAI to explain why each route is interesting
 - **Interactive Maps**: Visual route comparison with POI markers
-- **Customizable Preferences**: Weight routes by scenic areas, food, culture, architecture, and walkability
+- **Customizable Preferences**: Weight routes by scenic areas, food, culture, and walkability
 
 ## Quick Start
 

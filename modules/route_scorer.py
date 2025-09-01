@@ -28,9 +28,7 @@ def calculate_heuristic_score(route: Dict, pois: List[Dict], preferences: Dict[s
         'art_gallery': preferences.get('culture', 0),
         'library': preferences.get('culture', 0),
         'park': preferences.get('scenic', 0),
-        'tourist_attraction': preferences.get('scenic', 0),
-        'place_of_worship': preferences.get('architecture', 0),
-        'city_hall': preferences.get('architecture', 0)
+        'tourist_attraction': preferences.get('scenic', 0)
     }
     
     for poi in pois:

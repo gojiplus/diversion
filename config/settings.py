@@ -29,7 +29,6 @@ POI_TYPE_MAPPING = {
     'food': ['restaurant', 'cafe', 'bakery', 'meal_takeaway'],
     'culture': ['museum', 'art_gallery', 'library', 'book_store'],
     'scenic': ['park', 'tourist_attraction', 'natural_feature'],
-    'architecture': ['place_of_worship', 'city_hall', 'courthouse'],
     'walkable': ['pedestrian_street', 'plaza']
 }
 
