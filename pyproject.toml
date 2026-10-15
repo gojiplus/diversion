@@ -94,3 +94,5 @@ fail_under = 85
 show_missing = true
 
 [tool.preen]
+# This endpoint requires authenticated POST requests, not a link checker's GET.
+link_ignore = ['^https://routes[.]googleapis[.]com/directions/v2:computeRoutes$']

@@ -37,7 +37,7 @@ test-wheel: build
 ci: sync lint test docs test-wheel
 
 conformance:
-	$(UV)x preen check --strict --skip tests
+	$(UV)x --from preen==0.6.2 preen check --strict --skip tests
 	$(UV)x zizmor --min-severity high .github/workflows/
 
 ci-docker:
