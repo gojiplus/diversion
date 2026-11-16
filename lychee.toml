@@ -1,0 +1,6 @@
+# Patterns are written without a scheme: preen's links check scans this file
+# too, and a pattern with one would be extracted and checked as a link.
+exclude = [
+  # This endpoint requires authenticated POST requests, not a link checker's GET.
+  '//routes[.]googleapis[.]com/directions/v2:computeRoutes$',
+]
