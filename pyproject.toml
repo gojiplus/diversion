@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "streamlit>=1.66",
-    "requests>=2.32",
+    "requests>=2.32.2",
     "polyline>=2",
     "openai>=2",
     "python-dotenv>=1.1",
