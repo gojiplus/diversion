@@ -381,7 +381,7 @@ requires-dist = [
     { name = "openai", specifier = ">=2" },
     { name = "polyline", specifier = ">=2" },
     { name = "python-dotenv", specifier = ">=1.1" },
-    { name = "requests", specifier = ">=2.32" },
+    { name = "requests", specifier = ">=2.32.2" },
     { name = "streamlit", specifier = ">=1.66" },
 ]
 
